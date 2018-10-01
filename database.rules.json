@@ -1,0 +1,12 @@
+{
+	"rules": {
+		"posts": {
+			".write": "auth.uid == ''"
+		},
+		"users": {
+			"$uid": {
+				".write": "$uid == auth.uid"
+			}
+		}
+	}
+}
