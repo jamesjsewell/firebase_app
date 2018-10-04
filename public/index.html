@@ -22,134 +22,30 @@
 
     <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
+    <link type="text/css" rel="stylesheet" href="index.css" />
 
   </head>
   <body>
-    <script>
-      
-      var addStuff = function(){
-        return
-      }
-      
-    </script>
-    <div id="firebaseui-auth-container"></div>
-    <div id="sign-in-status"></div>
-    <div id="sign-in"></div>
-    <div id="account-details"></div>
-    <div id="logout-button"></div>
-    <button onClick="addStuff()">add stuff</button>
+    
+    <div class="test" id="app_wrapper">
 
+      <div id="auth_wrapper">
+        <div id="firebaseui-auth-container"></div>
+        <div id="account-details"></div>
+        <div id="logout-button"></div>
+        <button onclick="addStuff()">add stuff</button>
+      </div>
+
+      <div id="edit_posts_page_wrapper">
+
+      </div>
+
+      <div id="posts_wrapper"></div>
+
+    </div>
+
+    <script src="viewPosts.js"></script>
+    <script src="editPostsPage.js"></script>
     <script src="index.js"></script>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        
-        //firebase.auth().onAuthStateChanged(user => { console.log(user)});
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-
-        database = firebase.database()
-        
-        addStuff = function(){
-
-          var newPostRef = database.ref('posts').push();
-          newPostRef.set({
-              title: 'new testing post',
-              description: 'this is a new post'
-          });
-        }
-
-        var currentUid = null;  
-
-        function showLogin(){
-          try {
-            let app = firebase.app();
-            let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
-          
-            // Initialize the FirebaseUI Widget using Firebase.
-            var ui = new firebaseui.auth.AuthUI(firebase.auth());
-
-            // if (ui.isPendingRedirect()) {
-              ui.start('#firebaseui-auth-container', {
-                signInFlow: 'popup',
-                signInSuccessUrl: '/',
-                signInOptions: [
-                  firebase.auth.EmailAuthProvider.PROVIDER_ID,
-                ]
-              // Other config options...
-              });
-            //}
-
-          } catch (e) {
-            console.error(e);
-            document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
-          }
-        }
-
-        firebase.auth().onAuthStateChanged(function(user) {
-
-            if (user && user.uid != currentUid) { 
-
-              currentUid = user.uid
-              // User is signed in.
-              var displayName = user.displayName;
-              var email = user.email;
-              var emailVerified = user.emailVerified;
-              var photoURL = user.photoURL;
-              var uid = user.uid;
-              var phoneNumber = user.phoneNumber;
-              var providerData = user.providerData;
-              user.getIdToken().then(function(accessToken) {
-                document.getElementById('sign-in-status').textContent = 'Signed in';
-                document.getElementById('sign-in').textContent = 'Sign out';
-                document.getElementById('account-details').textContent = JSON.stringify({
-                  displayName: displayName,
-                  email: email,
-                  emailVerified: emailVerified,
-                  phoneNumber: phoneNumber,
-                  photoURL: photoURL,
-                  uid: uid,
-                  accessToken: accessToken,
-                  providerData: providerData
-                }, null, '  ');
-
-                database.ref('users/' + uid).set({
-                  username: displayName,
-                  email: email,
-                  profileImg: photoURL
-                });
-
-                var authElement = document.getElementById('firebaseui-auth-container').innerHTML = '<div id="firebaseui-auth-container"></div>'
-                var $logoutButton = $('#logout-button')
-
-                $logoutButton.html('<button id="logout-button">logout</button>')
-                $logoutButton.click((e)=>{
-                  e.preventDefault()
-                  firebase.auth().signOut()
-                })
-
-                
-              });
-
-              
-
-            } else {
-              // User is signed out.
-              var $logoutButton = $('#logout-button')
-              $logoutButton.html('<div id="logout-button"></div>')
-              showLogin()
-              document.getElementById('sign-in-status').textContent = 'Signed out';
-              document.getElementById('account-details').textContent = 'null';
-            
-            }
-          }, 
-          
-          function(error) {
-            console.log(error);
-          })
-
-      });
-    </script>
   </body>
 </html>
