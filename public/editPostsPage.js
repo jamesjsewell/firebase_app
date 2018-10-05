@@ -18,10 +18,14 @@ function editPostsPage () {
     function clickedEditButton (e) {
       e.preventDefault()
 
+      var childKey = e.target.getAttribute('firebase_key')
+
+      var post = postsObj[childKey]
+
       $postWrapper = $(`#${e.target.getAttribute('firebase_key')}`)
       $postWrapper.html(`
       <div class="post_wrapper">
-        <form><input placeholder="title" /> <input placeholder="description" /> <input placeholder="category" /> <input placeholder="link_name" /><input placeholder="link_href" /></form><button>cancel</button><button>continue</button>
+        <form><input value="${post.title}" placeholder="title" /> <input value="${post.description}" placeholder="description" /> <input value="${post.category}"  placeholder="category" /> <input value="${post.link_name}"  placeholder="link_name" /><input value="${post.link_href}"  placeholder="link_href" /></form><button>cancel</button><button>continue</button>
       </div>`)
     }
 
