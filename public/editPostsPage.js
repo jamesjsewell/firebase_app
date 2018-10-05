@@ -25,8 +25,84 @@ function editPostsPage () {
       $postWrapper = $(`#${e.target.getAttribute('firebase_key')}`)
       $postWrapper.html(`
       <div class="post_wrapper">
-        <form><input value="${post.title}" placeholder="title" /> <input value="${post.description}" placeholder="description" /> <input value="${post.category}"  placeholder="category" /> <input value="${post.link_name}"  placeholder="link_name" /><input value="${post.link_href}"  placeholder="link_href" /></form><button>cancel</button><button>continue</button>
+        <form id="edit_post_form">
+          <input name="title" value="${post.title}" placeholder="title" /> 
+          <input name="description" value="${post.description}" placeholder="description" /> 
+          <input name="category" value="${post.category}"  placeholder="category" /> 
+          <input name="link_name" value="${post.link_name}"  placeholder="link_name" />
+          <input name="link_href" value="${post.link_href}"  placeholder="link_href" /> 
+          <button type="submit" id="save_btn" >save</button>
+        </form>
+        <button>cancel</button>
       </div>`)
+
+      $('#edit_post_form').submit((e) => {
+        e.preventDefault()
+        var title = e.target.title.value
+        var description = e.target.description.value
+        var category = e.target.category.value
+        var link_name = e.target.link_name.value
+        var link_href = e.target.link_href.value
+
+        console.log(description, post['description'])
+
+        var changed = false
+        var updatedPost = {
+          title: post.title,
+          description: post.description,
+          category: post.category,
+          link_name: post.link_name,
+          link_href: post.link_href
+        }
+
+        for (var attribute in updatedPost) {
+          switch (attribute) {
+            case 'title': {
+              if (post[attribute] !== title) {
+                changed = true
+                updatedPost[attribute] = title
+              }
+              break
+            }
+            case 'description': {
+              if (post[attribute] !== description) {
+                console.log('description changed')
+                changed = true
+                updatedPost[attribute] = description
+              }
+              break
+            }
+            case 'category': {
+              if (post[attribute] !== category) {
+                console.log('category changed')
+                changed = true
+                updatedPost[attribute] = category
+              }
+              break
+            }
+            case 'link_name': {
+              if (post[attribute] !== link_name) {
+                console.log('link_name changed')
+                changed = true
+                updatedPost[attribute] = link_name
+              }
+              break
+            }
+            case 'link_href': {
+              if (post[attribute] !== link_href) {
+                console.log('link_href changed')
+                changed = true
+                updatedPost[attribute] = link_href
+              }
+              break
+            }
+          }
+        }
+
+        if (changed === true) {
+          db.update(() => { console.log('it worked') }, childKey, updatedPost)
+        }
+      })
     }
 
     $('#posts_wrapper').html(rendered)

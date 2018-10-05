@@ -1,4 +1,6 @@
 var postsObj = {}
+var db = {}
+var selectedCategory = 'testing'
 
 $(document).ready(() => {
   // firebase.auth().onAuthStateChanged(user => { console.log(user)});
@@ -12,11 +14,28 @@ $(document).ready(() => {
 
   var postsRef = database.ref('posts')
 
-  var selectedCategory = 'javascript'
+  postsRef.on('value', function (snapshot) {
+    snapshot.forEach(function (post) {
+      var postKey = post.key
+      var postData = post.val()
+
+      if (postData.category === selectedCategory) {
+        postsObj[postKey] = postData
+      }
+    })
+
+    router()
+  })
 
   var pushPost = function (data) {
     var newPostRef = postsRef.push()
     newPostRef.set(data)
+  }
+
+  var updatePost = function (onSuccess, childKey, newData) {
+    var updatedChild = {}
+    updatedChild['/' + childKey] = newData
+    postsRef.update(updatedChild)
   }
 
   var fetchPosts = function (onSuccess) {
@@ -29,7 +48,7 @@ $(document).ready(() => {
         var postKey = post.key
         var postData = post.val()
 
-        if (postData.category == selectedCategory) {
+        if (postData.category === selectedCategory) {
           postsObj[postKey] = postData
         }
       })
@@ -37,11 +56,7 @@ $(document).ready(() => {
     })
   }
 
-  var updatePost = function (onSuccess, newData) {
-    var updatedChild = {}
-    updatedChild['/' + childKey] = newData
-    postsRef.update(updatedChild)
-  }
+  db = {fetch: fetchPosts, push: pushPost, update: updatePost}
 
   function showLogin () {
     try {
@@ -119,7 +134,7 @@ $(document).ready(() => {
   })
 
   function runRouter () {
-    router({fetch: fetchPosts, push: pushPost}, selectedCategory)
+    router()
   }
 
   runRouter()
@@ -129,14 +144,15 @@ $(document).ready(() => {
   })
 })
 
-function router (db, category) {
+function router () {
   switch (window.location.hash) {
     case '#view': {
-      db.fetch(viewPosts)
+      viewPosts()
+
       break
     }
     case '#edit': {
-      db.fetch(editPostsPage)
+      editPostsPage()
       break
     }
   }
