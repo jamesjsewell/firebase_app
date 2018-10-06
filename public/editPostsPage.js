@@ -1,7 +1,21 @@
 
 function editPostsPage () {
   function render () {
-    var rendered = ''
+    var rendered = `
+    
+      <div>
+        <form id="new_post_form">
+          <input name="title" placeholder="title" /> 
+          <input name="description" placeholder="description" /> 
+          <input name="category" placeholder="category" /> 
+          <input name="link_name" placeholder="link_name" />
+          <input name="link_href"  placeholder="link_href" /> 
+          <button type="submit" id="new_post_button" >save</button>
+        </form>
+      </div>
+    
+    
+    `
 
     for (var postKey in postsObj) {
       var thePost = postsObj[postKey]
@@ -105,9 +119,31 @@ function editPostsPage () {
       })
     }
 
+    function onNewPost (e) {
+      e.preventDefault()
+
+      var title = e.target.title.value
+      var description = e.target.description.value
+      var category = e.target.category.value
+      var link_name = e.target.link_name.value
+      var link_href = e.target.link_href.value
+
+      var newPost = {
+        title: title,
+        description: description,
+        category: category,
+        link_name: link_name,
+        link_href: link_href
+      }
+
+      db.push(newPost)
+    }
+
     $('#posts_wrapper').html(rendered)
 
     $('.edit_post_button').click(clickedEditButton)
+
+    $('#new_post_form').submit(onNewPost)
   }
 
   render()
