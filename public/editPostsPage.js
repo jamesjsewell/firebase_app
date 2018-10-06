@@ -25,6 +25,7 @@ function editPostsPage () {
           <p>${thePost.description}</p>
           <a href="${thePost.link_href}">${thePost.link_name}</a>
           <button firebase_key="${postKey}" class="edit_post_button">edit</button>
+          
         </div>
         `
     }
@@ -36,9 +37,8 @@ function editPostsPage () {
 
       var post = postsObj[childKey]
 
-      $postWrapper = $(`#${e.target.getAttribute('firebase_key')}`)
+      $postWrapper = $(`#${childKey}`)
       $postWrapper.html(`
-      <div class="post_wrapper">
         <form id="edit_post_form">
           <input name="title" value="${post.title}" placeholder="title" /> 
           <input name="description" value="${post.description}" placeholder="description" /> 
@@ -48,7 +48,20 @@ function editPostsPage () {
           <button type="submit" id="save_btn" >save</button>
         </form>
         <button>cancel</button>
-      </div>`)
+        <button firebase_key="${postKey}" id="delete_post_button">delete</button>`)
+
+      function deletePost (e) {
+        e.preventDefault()
+
+        function onDelete () {
+          delete postsObj[childKey]
+
+          $(`#${childKey}`).remove()
+        }
+        db.delete(childKey, onDelete)
+      }
+
+      $('#delete_post_button').click(deletePost)
 
       $('#edit_post_form').submit((e) => {
         e.preventDefault()

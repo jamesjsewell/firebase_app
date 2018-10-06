@@ -33,9 +33,9 @@ $(document).ready(() => {
   }
 
   var updatePost = function (onSuccess, childKey, newData) {
-    var updatedChild = {}
-    updatedChild['/' + childKey] = newData
-    postsRef.update(updatedChild)
+    var updated = {}
+    updated['/' + childKey] = newData
+    postsRef.update(updated)
   }
 
   var fetchPosts = function (onSuccess) {
@@ -56,7 +56,19 @@ $(document).ready(() => {
     })
   }
 
-  db = {fetch: fetchPosts, push: pushPost, update: updatePost}
+  var deletePost = function (childKey, onSuccess) {
+    var updated = {}
+    updated['/' + childKey] = null
+    postsRef.update(updated, (err) => {
+      if (err) {
+        console.log('something went wrong')
+      } else{
+        onSuccess()
+      }
+    })
+  }
+
+  db = {fetch: fetchPosts, push: pushPost, update: updatePost, delete: deletePost}
 
   function showLogin () {
     try {
