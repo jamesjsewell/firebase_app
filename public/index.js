@@ -1,6 +1,8 @@
 var postsObj = {}
 var db = {}
 var selectedCategory = 'testing'
+var refPath = ''
+var dbRef = null
 
 $(document).ready(() => {
   // firebase.auth().onAuthStateChanged(user => { console.log(user)});
@@ -12,34 +14,35 @@ $(document).ready(() => {
 
   var database = firebase.database()
 
-  var postsRef = database.ref('posts')
-
-  postsRef.on('value', function (snapshot) {
-    snapshot.forEach(function (post) {
-      var postKey = post.key
-      var postData = post.val()
-
-      if (postData.category === selectedCategory) {
+  function selectCategory (category) {
+    postsObj = {}
+    refPath = category
+    dbRef = database.ref(refPath)
+    dbRef.on('value', function (snapshot) {
+      snapshot.forEach(function (post) {
+        var postKey = post.key
+        var postData = post.val()
         postsObj[postKey] = postData
-      }
-    })
+      })
 
-    router()
-  })
+      // re-renders view with updated data
+      router()
+    })
+  }
 
   var pushPost = function (data) {
-    var newPostRef = postsRef.push()
+    var newPostRef = dbRef.push()
     newPostRef.set(data)
   }
 
   var updatePost = function (onSuccess, childKey, newData) {
     var updated = {}
     updated['/' + childKey] = newData
-    postsRef.update(updated)
+    dbRef.update(updated)
   }
 
   var fetchPosts = function (onSuccess) {
-    postsRef.once('value').then(function (snapshot) {
+    dbRef.once('value').then(function (snapshot) {
       postsObj = {}
 
       // goes over every post obj and if it matches the selected category, it
@@ -59,16 +62,16 @@ $(document).ready(() => {
   var deletePost = function (childKey, onSuccess) {
     var updated = {}
     updated['/' + childKey] = null
-    postsRef.update(updated, (err) => {
+    dbRef.update(updated, (err) => {
       if (err) {
         console.log('something went wrong')
-      } else{
+      } else {
         onSuccess()
       }
     })
   }
 
-  db = {fetch: fetchPosts, push: pushPost, update: updatePost, delete: deletePost}
+  db = {fetch: fetchPosts, push: pushPost, update: updatePost, delete: deletePost, selectCategory: selectCategory}
 
   function showLogin () {
     try {
@@ -106,16 +109,16 @@ $(document).ready(() => {
       var phoneNumber = user.phoneNumber
       var providerData = user.providerData
       user.getIdToken().then(function (accessToken) {
-        document.getElementById('account-details').textContent = JSON.stringify({
-          displayName: displayName,
-          email: email,
-          emailVerified: emailVerified,
-          phoneNumber: phoneNumber,
-          photoURL: photoURL,
-          uid: uid,
-          accessToken: accessToken,
-          providerData: providerData
-        }, null, '  ')
+        // document.getElementById('account-details').textContent = JSON.stringify({
+        //   displayName: displayName,
+        //   email: email,
+        //   emailVerified: emailVerified,
+        //   phoneNumber: phoneNumber,
+        //   photoURL: photoURL,
+        //   uid: uid,
+        //   accessToken: accessToken,
+        //   providerData: providerData
+        // }, null, '  ')
 
         database.ref('users/' + uid).set({
           username: displayName,
@@ -159,11 +162,13 @@ $(document).ready(() => {
 function router () {
   switch (window.location.hash) {
     case '#view': {
+      navbarRender(db.selectCategory)
       viewPosts()
 
       break
     }
     case '#edit': {
+      navbarRender(db.selectCategory)
       editPostsPage()
       break
     }
