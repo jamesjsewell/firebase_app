@@ -15,15 +15,15 @@
     <!-- include only the Firebase features as you need -->
     <script defer src="/__/firebase/5.5.1/firebase-auth.js"></script>
     <script defer src="/__/firebase/5.5.1/firebase-database.js"></script>
-    <script defer src="/__/firebase/5.5.1/firebase-messaging.js"></script>
     <script defer src="/__/firebase/5.5.1/firebase-storage.js"></script>
     <!-- initialize the SDK after all desired features are loaded -->
     <script defer src="/__/firebase/init.js"></script>
 
+    <!-- firebase ui javascript and css -->
     <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
-    <link type="text/css" rel="stylesheet" href="index.css" />
-    
+  
+    <!-- bootstrap 4 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -31,26 +31,19 @@
   </head>
   <body>
     
-    <div id="app_wrapper">
+    <div id="app_wrapper" class="container">
 
-        <div id="auth_wrapper">
-            <div id="firebaseui-auth-container"></div>
-            <div id="account-details"></div>
-            <div id="logout-button"></div>
-           
-        </div>
-
-      <div id="navbar"></div>
-      
-
-      <div id="edit_posts_page_wrapper">
-
+      <div class="container">
+        <div id="navbar" class="row"></div>
       </div>
-
-      <div id="posts_wrapper"></div>
+  
+      <div class="container">
+        <div id="posts_wrapper" class="row list-group"></div>
+      </div>
 
     </div>
 
+    <!-- scripts i wrote for the logic of the app -->
     <script src="auth.js"></script>
     <script src="navbar.js"></script>
     <script src="viewPosts.js"></script>

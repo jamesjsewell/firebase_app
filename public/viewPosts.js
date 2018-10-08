@@ -6,12 +6,12 @@ function viewPosts () {
       var thePost = postsObj[postKey]
 
       rendered += `
-        <div class="post_wrapper">
-          <h5>${thePost.title}</h5>
-          <p>${thePost.description}</p>
-          <a href="${thePost.link_href}">${thePost.link_name}</a>
-          <div id="${postKey}" class="edit_post_wrapper"></div>
-        </div>
+        <a href="${thePost.link_href}" class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">${thePost.title}</h5>
+          </div>
+          <p class="mb-1">${thePost.description}</p>
+        </a>
         `
     }
 
