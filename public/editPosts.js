@@ -1,6 +1,7 @@
 
-function editPostsPage () {
+function editPosts () {
   function render () {
+    console.log(postsObj)
     var rendered = `
     
       <div>

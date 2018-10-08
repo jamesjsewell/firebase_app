@@ -1,23 +1,48 @@
+// defining global variables, these will be updated and used throughout
 var postsObj = {}
 var db = {}
 var selectedCategory = 'testing'
 var refPath = ''
 var dbRef = null
+var currentUid = null
+var database = null
+
+// starts the rendering of the page
+function renderPage () {
+  navbarRender(db.selectCategory)
+
+  var uid = null
+
+  // gets the logged in user's id
+  if (firebase.auth().currentUser) {
+    var uid = firebase.auth().currentUser.uid
+  }
+
+  // if the user is logged in as the admin, render the edit page, otherwise render the view page
+  if (uid === '3QWcQh1uANhtiu5dfCwp21sw5Y83') {
+    // this is the function that does the actual rendering, defined in editPosts.js
+    editPosts()
+  } else {
+    // this is the function that does the actual rendering, defined in viewPosts.js
+    viewPosts()
+  }
+}
 
 $(document).ready(() => {
-  // firebase.auth().onAuthStateChanged(user => { console.log(user)});
-  // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-  // firebase.messaging().requestPermission().then(() => { });
-  // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+  database = firebase.database()
 
-  var currentUid = null
+  // function in auth.js
+  startAuth()
 
-  var database = firebase.database()
-
+  // takes in user selected category of posts, gathers the data for that category, and renders the page
   function selectCategory (category) {
     postsObj = {}
+
+    // goes to correct category firebase database endpoint
     refPath = category
     dbRef = database.ref(refPath)
+
+    // reads data from endpoint collection, sets it on the posts object
     dbRef.on('value', function (snapshot) {
       snapshot.forEach(function (post) {
         var postKey = post.key
@@ -25,40 +50,26 @@ $(document).ready(() => {
         postsObj[postKey] = postData
       })
 
-      // re-renders view with updated data
-      router()
+      // renders page once data has been gathered
+      selectedCategory = category
+      renderPage()
     })
   }
 
+  // creates new user defined posts
   var pushPost = function (data) {
     var newPostRef = dbRef.push()
     newPostRef.set(data)
   }
 
+  // updates a user edited post
   var updatePost = function (onSuccess, childKey, newData) {
     var updated = {}
     updated['/' + childKey] = newData
     dbRef.update(updated)
   }
 
-  var fetchPosts = function (onSuccess) {
-    dbRef.once('value').then(function (snapshot) {
-      postsObj = {}
-
-      // goes over every post obj and if it matches the selected category, it
-      // will be placed on the postsObj variable
-      snapshot.forEach(function (post) {
-        var postKey = post.key
-        var postData = post.val()
-
-        if (postData.category === selectedCategory) {
-          postsObj[postKey] = postData
-        }
-      })
-      onSuccess()
-    })
-  }
-
+  // deletes a user selected post
   var deletePost = function (childKey, onSuccess) {
     var updated = {}
     updated['/' + childKey] = null
@@ -71,106 +82,10 @@ $(document).ready(() => {
     })
   }
 
-  db = {fetch: fetchPosts, push: pushPost, update: updatePost, delete: deletePost, selectCategory: selectCategory}
+  // adds the database functions above to a global variable called db that i can make use of in other scripts
+  db = {push: pushPost, update: updatePost, delete: deletePost, selectCategory: selectCategory}
 
-  function showLogin () {
-    try {
-      let app = firebase.app()
-      let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function')
-
-      // Initialize the FirebaseUI Widget using Firebase.
-      var ui = new firebaseui.auth.AuthUI(firebase.auth())
-
-      // if (ui.isPendingRedirect()) {
-      ui.start('#firebaseui-auth-container', {
-        signInFlow: 'popup',
-        signInSuccessUrl: '/',
-        signInOptions: [
-          firebase.auth.EmailAuthProvider.PROVIDER_ID
-        ]
-        // Other config options...
-      })
-      // }
-    } catch (e) {
-      console.error(e)
-      document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.'
-    }
-  }
-
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (user && user.uid !== currentUid) {
-      // User is signed in.
-      currentUid = user.uid
-      var displayName = user.displayName
-      var email = user.email
-      var emailVerified = user.emailVerified
-      var photoURL = user.photoURL
-      var uid = user.uid
-      var phoneNumber = user.phoneNumber
-      var providerData = user.providerData
-      user.getIdToken().then(function (accessToken) {
-        // document.getElementById('account-details').textContent = JSON.stringify({
-        //   displayName: displayName,
-        //   email: email,
-        //   emailVerified: emailVerified,
-        //   phoneNumber: phoneNumber,
-        //   photoURL: photoURL,
-        //   uid: uid,
-        //   accessToken: accessToken,
-        //   providerData: providerData
-        // }, null, '  ')
-
-        database.ref('users/' + uid).set({
-          username: displayName,
-          email: email,
-          profileImg: photoURL
-        })
-
-        var authElement = document.getElementById('firebaseui-auth-container').innerHTML = '<div id="firebaseui-auth-container"></div>'
-        var $logoutButton = $('#logout-button')
-
-        $logoutButton.html('<button id="logout-button">logout</button>')
-        $logoutButton.click((e) => {
-          e.preventDefault()
-          firebase.auth().signOut()
-        })
-      })
-    } else {
-      // User is signed out.
-      var $logoutButton = $('#logout-button')
-      $logoutButton.html('<div id="logout-button"></div>')
-      showLogin()
-      document.getElementById('account-details').textContent = null
-    }
-  },
-
-  function (error) {
-    console.log(error)
-  })
-
-  function runRouter () {
-    router()
-  }
-
-  runRouter()
-
-  window.addEventListener('hashchange', function () {
-    runRouter()
-  })
+  // set the default selected category of posts
+  db.selectCategory('misc')
+  navbarRender(db.selectCategory)
 })
-
-function router () {
-  switch (window.location.hash) {
-    case '#view': {
-      navbarRender(db.selectCategory)
-      viewPosts()
-
-      break
-    }
-    case '#edit': {
-      navbarRender(db.selectCategory)
-      editPostsPage()
-      break
-    }
-  }
-}
