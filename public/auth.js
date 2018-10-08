@@ -6,7 +6,7 @@ function startAuth () {
 
       // Initialize the FirebaseUI Widget using Firebase.
       var ui = new firebaseui.auth.AuthUI(firebase.auth())
-
+      $('#app_wrapper').html('<div id="app_wrapper"><div id="auth_wrapper"/><div id="firebaseui-auth-container"/></div></div>')
       // if (ui.isPendingRedirect()) {
       ui.start('#firebaseui-auth-container', {
         signInFlow: 'popup',
@@ -42,21 +42,10 @@ function startAuth () {
         })
 
         var authElement = document.getElementById('firebaseui-auth-container').innerHTML = '<div id="firebaseui-auth-container"></div>'
-        var $logoutButton = $('#logout-button')
-
-        $logoutButton.html('<button id="logout-button">logout</button>')
-        $logoutButton.click((e) => {
-          e.preventDefault()
-          firebase.auth().signOut()
-        })
       })
-      renderPage()
     } else {
       // User is signed out.
-      var $logoutButton = $('#logout-button')
-      $logoutButton.html('<div id="logout-button"></div>')
       showLogin()
-      document.getElementById('account-details').textContent = null
     }
   },
 

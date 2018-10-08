@@ -9,14 +9,15 @@ var database = null
 
 // starts the rendering of the page
 function renderPage () {
-  navbarRender(db.selectCategory)
-
   var uid = null
-
+  var loggedIn = false
   // gets the logged in user's id
   if (firebase.auth().currentUser) {
+    loggedIn = true
     var uid = firebase.auth().currentUser.uid
   }
+
+  navbarRender(db.selectCategory, loggedIn)
 
   // if the user is logged in as the admin, render the edit page, otherwise render the view page
   if (uid === '3QWcQh1uANhtiu5dfCwp21sw5Y83') {
