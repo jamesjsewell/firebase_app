@@ -40,8 +40,6 @@ function startAuth () {
           email: email,
           profileImg: photoURL
         })
-
-        var authElement = document.getElementById('firebaseui-auth-container').innerHTML = '<div id="firebaseui-auth-container"></div>'
       })
     } else {
       // User is signed out.
