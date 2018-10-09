@@ -51,8 +51,11 @@ $(document).ready(() => {
         postsObj[postKey] = postData
       })
 
+      Cookies.set('category', category)
+
       // renders page once data has been gathered
       selectedCategory = category
+
       renderPage()
     })
   }
@@ -87,6 +90,6 @@ $(document).ready(() => {
   db = {push: pushPost, update: updatePost, delete: deletePost, selectCategory: selectCategory}
 
   // set the default selected category of posts
-  db.selectCategory('misc')
+  db.selectCategory(Cookies.get('category') ? Cookies.get('category') : 'misc')
   navbarRender(db.selectCategory)
 })
