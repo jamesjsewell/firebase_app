@@ -101,8 +101,15 @@ function editPosts () {
         </div>
       </form>`)
 
+      // hide submit button of new post form
+      $('#new_post_button').hide()
+
       function cancelEdit (e) {
         e.preventDefault()
+        // show submit button of new post form
+        $('#new_post_button').show()
+
+        // set html of edit form back to the original post's html
         $(`#${childKey}`).html($oldHTML)
         render()
       }
@@ -112,7 +119,8 @@ function editPosts () {
 
         function onDelete () {
           delete postsObj[childKey]
-
+          // show submit button of new post form
+          $('#new_post_button').show()
           $(`#${childKey}`).remove()
         }
         db.delete(childKey, onDelete)
