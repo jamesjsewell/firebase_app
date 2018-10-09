@@ -141,7 +141,6 @@ function editPosts () {
         var updatedPost = {
           title: post.title,
           description: post.description,
-          category: post.category,
           link_name: post.link_name,
           link_href: post.link_href
         }
