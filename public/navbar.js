@@ -3,9 +3,12 @@ function navbarRender (onSelect, loggedIn) {
   $('#navbar').html(`
 
     <button class="${selectedCategory === 'misc' ? 'btn-secondary ' : 'btn-outline-primary '} category_link btn m-1" path="misc">misc</button>
-    <button class="${selectedCategory === 'javascript' ? 'btn-secondary ' : 'btn-outline-primary '} category_link btn m-1"  path="javascript">javascript</button>
+    <button class="${selectedCategory === 'terminal' ? 'btn-secondary ' : 'btn-outline-primary '} category_link btn m-1" path="terminal">terminal</button>
+    <button class="${selectedCategory === 'git' ? 'btn-secondary ' : 'btn-outline-primary '} category_link btn m-1"  path="git">git</button>
+    <button class="${selectedCategory === 'editors' ? 'btn-secondary ' : 'btn-outline-primary '} category_link btn m-1"  path="editors">editors</button>
     <button class="${selectedCategory === 'python' ? 'btn-secondary ' : 'btn-outline-primary '} category_link btn m-1"  path="python">python</button>
-    
+    <button class="${selectedCategory === 'javascript' ? 'btn-secondary ' : 'btn-outline-primary '} category_link btn m-1"  path="javascript">javascript</button>
+    <button class="${selectedCategory === 'html' ? 'btn-secondary ' : 'btn-outline-primary '} category_link btn m-1"  path="html">html</button>
     <div class="btn-group">
       <button class="${selectedCategory.includes('css') ? 'btn-secondary ' : 'btn-outline-primary '} btn m-1 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" path="none">css</button>
       <div class="dropdown-menu">

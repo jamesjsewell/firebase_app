@@ -6,12 +6,19 @@ function viewPosts () {
       var thePost = postsObj[postKey]
 
       rendered += `
-        <a ${thePost.link_href ? `href=${thePost.link_href}` : ''} class="list-group-item list-group-item-action flex-column align-items-start">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">${thePost.title}</h5>
-          </div>
-          <p class="mb-1">${thePost.description}</p>
-        </a>
+        <div class="list-group-item flex-column align-items-start">  
+            <div class="card text-center">
+              <div class="card-header">
+                ${thePost.title}
+              </div>
+              <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                  <p class="mb-1">${thePost.description}</p>
+                  <footer class="blockquote-footer">${thePost.link_href ? `<a href="${thePost.link_href}">visit ${thePost.link_name}</a>` : ''}</footer>
+                </blockquote>
+              </div>
+            </div>
+        </div>
         `
     }
 
