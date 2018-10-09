@@ -67,7 +67,8 @@ function editPosts () {
       $postWrapper = $(`#${childKey}`)
       var $oldHTML = $postWrapper.html()
       $postWrapper.html(`
-      <form id="edit_post_form">
+      <form id="edit_post_form" class="border border-primary p-3">
+        <span><small><h4>edit ${' ' + post.title}</h4></small></span>
         <div class="form-row">
           <div class="col-md-4 col-sm-12 mb-1 form-group">
             <label for="edit_title">title</label>
