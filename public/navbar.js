@@ -2,7 +2,7 @@
 function navbarRender (onSelect, loggedIn) {
   $('#navbar').html(`
 
-    <button class="${selectedCategory === 'testing' ? 'btn-secondary ' : 'btn-outline-primary '} category_link btn m-1" path="testing">test</button>
+    <button class="${selectedCategory === 'misc' ? 'btn-secondary ' : 'btn-outline-primary '} category_link btn m-1" path="misc">misc</button>
     <button class="${selectedCategory === 'javascript' ? 'btn-secondary ' : 'btn-outline-primary '} category_link btn m-1"  path="javascript">javascript</button>
     <button class="${selectedCategory === 'python' ? 'btn-secondary ' : 'btn-outline-primary '} category_link btn m-1"  path="python">python</button>
     

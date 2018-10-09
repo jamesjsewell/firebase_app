@@ -76,7 +76,7 @@ function editPosts () {
           </div>
           <div class="col-md-8 col-sm-12 mb-1 form-group">
             <label for="edit_description">description</label>
-            <textarea class="form-control" id="edit_description" name="description" rows="3" placeholder="enter description" ></textarea>
+            <textarea class="form-control" id="edit_description" name="description" rows="3" placeholder="enter description" >${post.description}</textarea>
           </div>
         </div>
 
@@ -134,7 +134,6 @@ function editPosts () {
         e.preventDefault()
         var title = e.target.title.value
         var description = e.target.description.value
-        var category = e.target.category.value
         var link_name = e.target.link_name.value
         var link_href = e.target.link_href.value
 
@@ -161,14 +160,6 @@ function editPosts () {
                 console.log('description changed')
                 changed = true
                 updatedPost[attribute] = description
-              }
-              break
-            }
-            case 'category': {
-              if (post[attribute] !== category) {
-                console.log('category changed')
-                changed = true
-                updatedPost[attribute] = category
               }
               break
             }
@@ -208,7 +199,6 @@ function editPosts () {
       var newPost = {
         title: title,
         description: description,
-        category: selectedCategory,
         link_name: link_name,
         link_href: link_href
       }

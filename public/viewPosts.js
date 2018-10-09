@@ -6,7 +6,7 @@ function viewPosts () {
       var thePost = postsObj[postKey]
 
       rendered += `
-        <a href="${thePost.link_href}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <a ${thePost.link_href ? `href=${thePost.link_href}` : ''} class="list-group-item list-group-item-action flex-column align-items-start">
           <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">${thePost.title}</h5>
           </div>

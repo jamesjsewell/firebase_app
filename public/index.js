@@ -1,7 +1,7 @@
 // defining global variables, these will be updated and used throughout
 var postsObj = {}
 var db = {}
-var selectedCategory = 'testing'
+var selectedCategory = 'misc'
 var refPath = ''
 var dbRef = null
 var currentUid = null
