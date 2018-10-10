@@ -1,32 +1,7 @@
 function startAuth () {
-  function showLogin () {
-    try {
-      let app = firebase.app()
-      let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function')
-
-      // Initialize the FirebaseUI Widget using Firebase.
-      var ui = new firebaseui.auth.AuthUI(firebase.auth())
-      $('#app_wrapper').html('<div id="app_wrapper"><div id="auth_wrapper"/><div id="firebaseui-auth-container"/></div></div>')
-      // if (ui.isPendingRedirect()) {
-      ui.start('#firebaseui-auth-container', {
-        signInFlow: 'popup',
-        signInSuccessUrl: '/',
-        signInOptions: [
-          firebase.auth.EmailAuthProvider.PROVIDER_ID
-        ]
-        // Other config options...
-      })
-      // }
-    } catch (e) {
-      console.error(e)
-      document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.'
-    }
-  }
-
   firebase.auth().onAuthStateChanged(function (user) {
-    if (user && user.uid !== currentUid) {
+    if (user && user.uid) {
       // User is signed in.
-      currentUid = user.uid
       var displayName = user.displayName
       var email = user.email
       var emailVerified = user.emailVerified
@@ -43,11 +18,51 @@ function startAuth () {
       })
     } else {
       // User is signed out.
-      showLogin()
+      // showLogin()e
+      renderPage()
     }
   },
 
   function (error) {
     console.log(error)
+  })
+}
+
+function showLogin () {
+  ui.start('#firebaseui-auth-container', {
+    callbacks: {
+      signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+        // User successfully signed in.
+        // Return type determines whether we continue the redirect automatically
+        // or whether we leave that to developer to handle.
+        return true
+      },
+      uiShown: function () {
+        // The widget is rendered.
+        // Hide the loader.
+        document.getElementById('app_wrapper').style.display = 'none'
+      }
+    },
+    signInFlow: 'popup',
+    autoUpgradeAnonymousUsers: false,
+    signInSuccessUrl: '/',
+    signInOptions: [
+      {
+        provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        requireDisplayName: false
+      },
+      {
+        provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        scopes: [
+          'https://www.googleapis.com/auth/plus.login'
+        ],
+        customParameters: {
+          // Forces account selection even when one account
+          // is available.
+          prompt: 'select_account'
+        }
+      }
+    ]
+    // Other config options...
   })
 }

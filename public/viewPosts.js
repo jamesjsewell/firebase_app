@@ -1,5 +1,6 @@
 function viewPosts () {
   function render (posts) {
+    $('#new_post_form_wrapper').html('<div></div>')
     var rendered = ''
 
     for (var postKey in postsObj) {

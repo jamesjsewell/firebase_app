@@ -4,8 +4,10 @@ var db = {}
 var selectedCategory = 'misc'
 var refPath = ''
 var dbRef = null
-var currentUid = null
 var database = null
+var ui = null
+
+$('#app_wrapper').toggle()
 
 // starts the rendering of the page
 function renderPage () {
@@ -17,8 +19,6 @@ function renderPage () {
     var uid = firebase.auth().currentUser.uid
   }
 
-  navbarRender(db.selectCategory, loggedIn)
-
   // if the user is logged in as the admin, render the edit page, otherwise render the view page
   if (uid === '3QWcQh1uANhtiu5dfCwp21sw5Y83') {
     // this is the function that does the actual rendering, defined in editPosts.js
@@ -27,13 +27,22 @@ function renderPage () {
     // this is the function that does the actual rendering, defined in viewPosts.js
     viewPosts()
   }
+
+  navbarRender(db.selectCategory, loggedIn)
 }
 
 $(document).ready(() => {
+  $('#app_wrapper').toggle()
+  startAuth()
+  let app = firebase.app()
+  let features = ['auth', 'database', 'storage'].filter(feature => typeof app[feature] === 'function')
+  ui = new firebaseui.auth.AuthUI(firebase.auth())
+
   database = firebase.database()
 
-  // function in auth.js
-  startAuth()
+  if (ui.isPendingRedirect()) {
+    showLogin()
+  }
 
   // takes in user selected category of posts, gathers the data for that category, and renders the page
   function selectCategory (category) {
