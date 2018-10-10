@@ -20,7 +20,7 @@ function renderPage () {
   }
 
   // if the user is logged in as the admin, render the edit page, otherwise render the view page
-  if (uid === '3QWcQh1uANhtiu5dfCwp21sw5Y83') {
+  if (uid === 'vC2tBVf1R6ddzXGWJuYXRhaQyHj1') {
     // this is the function that does the actual rendering, defined in editPosts.js
     editPosts()
   } else {
